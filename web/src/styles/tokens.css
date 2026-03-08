@@ -1,0 +1,31 @@
+:root{
+  /* AI-enterprise vibe: deep neutrals + electric accent */
+  --bg: 10 12 18;
+  --panel: 16 19 29;
+  --panel-2: 20 25 38;
+  --border: 35 42 63;
+  --text: 233 236 245;
+  --muted: 165 174 196;
+  --accent: 96 165 250;      /* blue */
+  --accent-2: 34 211 238;    /* cyan */
+  --danger: 248 113 113;
+  --success: 74 222 128;
+  --warning: 251 191 36;
+  --ring: 96 165 250;
+  --shadow: 0 0 0;
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --bg: 246 247 251;
+    --panel: 255 255 255;
+    --panel-2: 248 250 255;
+    --border: 226 232 240;
+    --text: 15 23 42;
+    --muted: 71 85 105;
+    --accent: 37 99 235;
+    --accent-2: 6 182 212;
+    --ring: 37 99 235;
+    --shadow: 15 23 42;
+  }
+}

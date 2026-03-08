@@ -1,0 +1,65 @@
+/* File: web/src/styles/globals.css */
+@import "tailwindcss";
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    background: rgb(var(--bg));
+    color: rgb(var(--text));
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+      "Apple Color Emoji","Segoe UI Emoji";
+  }
+  * { box-sizing: border-box; }
+  a { color: inherit; text-decoration: none; }
+}
+
+@layer components {
+  .panel { background: rgb(var(--panel)); border: 1px solid rgb(var(--border)); }
+  .panel-2 { background: rgb(var(--panel-2)); border: 1px solid rgb(var(--border)); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    border-radius: .75rem; padding: .5rem .75rem; font-size: .875rem; font-weight: 600;
+    transition: filter .15s ease, transform .15s ease;
+    border: 1px solid rgb(var(--border)); background: rgb(var(--panel-2));
+  }
+  .btn:hover { filter: brightness(1.05); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    border-color: rgba(var(--accent), 0.55);
+    background: linear-gradient(135deg, rgba(var(--accent), 0.18), rgba(var(--accent-2), 0.10));
+  }
+  .btn-success {
+    color: #f0fff7;
+    border-color: #15803d;
+    background: #16a34a;
+  }
+  .btn-success:hover { background: #15803d; filter: none; }
+  .chip {
+    display: inline-flex; align-items: center; border-radius: 9999px;
+    padding: .25rem .5rem; font-size: .75rem;
+    border: 1px solid rgba(var(--border), 0.9);
+    background: rgba(var(--panel), 0.65);
+    color: rgb(var(--muted));
+  }
+  .input {
+    width: 100%; border-radius: .75rem; padding: .5rem .75rem; font-size: .875rem;
+    background: rgb(var(--panel-2)); border: 1px solid rgb(var(--border));
+    color: rgb(var(--text)); outline: none;
+  }
+  .input:focus { box-shadow: 0 0 0 3px rgba(var(--ring), 0.25); }
+
+  .btn-secondary { background: rgb(var(--panel-2)); }
+  .btn-ghost { background: transparent; border-color: transparent; }
+  .btn-ghost:hover { background: rgba(var(--panel-2), 0.35); border-color: rgba(var(--border), 0.8); }
+  .sf-band {
+    background-color: #dbe7f7 !important;
+    color: #334155 !important;
+  }
+  @media (prefers-color-scheme: dark){
+    .sf-band {
+      background-color: rgba(59, 130, 246, 0.28) !important;
+      color: rgb(var(--text)) !important;
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "stages": [
+    {
+      "api_value": "Prospecting",
+      "label": "Prospecting",
+      "probability": 10,
+      "required_fields": [
+        "account_id",
+        "name"
+      ],
+      "key_fields": [
+        "account_id",
+        "owner",
+        "lead_source"
+      ],
+      "guidance": "Capture initial details and confirm the buying intent.",
+      "checklist": [
+        "Confirm account and primary contact",
+        "Capture lead source and context",
+        "Define initial next step"
+      ]
+    },
+    {
+      "api_value": "Qualification",
+      "label": "Qualification",
+      "probability": 20,
+      "required_fields": [
+        "account_id",
+        "name"
+      ],
+      "key_fields": [
+        "account_id",
+        "owner",
+        "lead_source"
+      ],
+      "guidance": "Qualify the deal: validate need, authority, budget, and timeline.",
+      "checklist": [
+        "Validate business need",
+        "Confirm decision process",
+        "Estimate timeline and budget"
+      ]
+    },
+    {
+      "api_value": "Needs Analysis",
+      "label": "Needs Analysis",
+      "probability": 30,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date"
+      ],
+      "key_fields": [
+        "close_date",
+        "next_step",
+        "owner"
+      ],
+      "guidance": "Deepen understanding of requirements and success criteria.",
+      "checklist": [
+        "Document requirements",
+        "Identify stakeholders",
+        "Agree on success criteria"
+      ]
+    },
+    {
+      "api_value": "Value Proposition",
+      "label": "Value Proposition",
+      "probability": 40,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date"
+      ],
+      "key_fields": [
+        "close_date",
+        "next_step",
+        "owner"
+      ],
+      "guidance": "Align on value and outcomes; map features to benefits.",
+      "checklist": [
+        "Quantify value",
+        "Align solution scope",
+        "Confirm timeline"
+      ]
+    },
+    {
+      "api_value": "Id. Decision Makers",
+      "label": "Identify Decision Makers",
+      "probability": 50,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date"
+      ],
+      "key_fields": [
+        "close_date",
+        "next_step",
+        "owner"
+      ],
+      "guidance": "Confirm who approves and influences the decision.",
+      "checklist": [
+        "Identify decision makers",
+        "Map influencers",
+        "Confirm approval steps"
+      ]
+    },
+    {
+      "api_value": "Perception Analysis",
+      "label": "Perception Analysis",
+      "probability": 60,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date"
+      ],
+      "key_fields": [
+        "close_date",
+        "next_step",
+        "owner"
+      ],
+      "guidance": "Validate perception of value and address objections early.",
+      "checklist": [
+        "Capture objections",
+        "Address risks",
+        "Confirm next meeting"
+      ]
+    },
+    {
+      "api_value": "Proposal/Price Quote",
+      "label": "Proposal/Price Quote",
+      "probability": 75,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date",
+        "amount"
+      ],
+      "key_fields": [
+        "amount",
+        "close_date",
+        "next_step"
+      ],
+      "guidance": "Present proposal and commercial terms; confirm close plan.",
+      "checklist": [
+        "Send proposal/quote",
+        "Confirm stakeholders review",
+        "Define negotiation plan"
+      ]
+    },
+    {
+      "api_value": "Negotiation/Review",
+      "label": "Negotiation/Review",
+      "probability": 90,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date",
+        "amount"
+      ],
+      "key_fields": [
+        "amount",
+        "close_date",
+        "next_step"
+      ],
+      "guidance": "Negotiate terms, finalize procurement/legal, and lock close date.",
+      "checklist": [
+        "Complete negotiation",
+        "Finalize legal/procurement",
+        "Confirm signature steps"
+      ]
+    },
+    {
+      "api_value": "Closed Won",
+      "label": "Closed Won",
+      "probability": 100,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date",
+        "amount"
+      ],
+      "key_fields": [
+        "amount",
+        "close_date",
+        "owner"
+      ],
+      "guidance": "Deal is won. Ensure handoff and document final terms.",
+      "checklist": [
+        "Confirm signed agreement",
+        "Kickoff handoff",
+        "Capture final notes"
+      ]
+    },
+    {
+      "api_value": "Closed Lost",
+      "label": "Closed Lost",
+      "probability": 0,
+      "required_fields": [
+        "account_id",
+        "name",
+        "close_date"
+      ],
+      "key_fields": [
+        "close_date",
+        "owner",
+        "next_step"
+      ],
+      "guidance": "Deal is lost. Capture reason and learnings.",
+      "checklist": [
+        "Capture loss reason",
+        "Capture competitor if known",
+        "Set follow-up if applicable"
+      ]
+    }
+  ]
+}

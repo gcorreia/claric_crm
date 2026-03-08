@@ -1,0 +1,104 @@
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    command: >
+      postgres
+      -c wal_level=replica
+      -c max_wal_senders=10
+      -c max_replication_slots=10
+      -c archive_mode=on
+      -c archive_timeout=60
+      -c archive_command='pgbackrest --config=/etc/pgbackrest.conf --stanza=crm archive-push %p'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - pgbackrest_repo:/var/lib/pgbackrest
+      - pgbackrest_spool:/var/lib/pgbackrest/spool
+      - ./pgbackrest/pgbackrest.conf:/etc/pgbackrest.conf:ro
+    networks:
+      - appnet
+
+  # 1x quando necessário (macOS/bind mounts): corrige owner/perms no repo/spool/restore
+  # Uso:
+  #   docker compose -f docker-compose.yml -f docker-compose.pitr.yml --profile init up pgbackrest_init
+  pgbackrest_init:
+    image: percona/percona-pgbackrest:latest
+    user: "0:0"
+    profiles: ["init"]
+    networks:
+      - appnet
+    volumes:
+      - pgbackrest_repo:/var/lib/pgbackrest
+      - pgbackrest_spool:/var/lib/pgbackrest/spool
+      - pgdata_restore:/var/lib/postgresql/data
+      - ./pgbackrest/pgbackrest.conf:/etc/pgbackrest.conf:ro
+    command:
+      [
+        "sh",
+        "-lc",
+        "mkdir -p /var/lib/pgbackrest /var/lib/pgbackrest/archive /var/lib/pgbackrest/backup /var/lib/pgbackrest/spool && \
+         chown -R 999:999 /var/lib/pgbackrest /var/lib/postgresql/data && \
+         chmod 770 /var/lib/pgbackrest /var/lib/pgbackrest/archive /var/lib/pgbackrest/backup /var/lib/pgbackrest/spool && \
+         chmod 700 /var/lib/postgresql/data || true"
+      ]
+
+  # Container “utilitário” pra rodar comandos pgbackrest manualmente
+  pgbackrest:
+    image: percona/percona-pgbackrest:latest
+    user: "999:999"
+    networks:
+      - appnet
+    volumes:
+      - pgbackrest_repo:/var/lib/pgbackrest
+      - pgbackrest_spool:/var/lib/pgbackrest/spool
+      - ./pgbackrest/pgbackrest.conf:/etc/pgbackrest.conf:ro
+    command: ["sh", "-lc", "sleep infinity"]
+
+  # Runner de restore (evita /restore e evita sed no postgresql.auto.conf)
+  # Uso (exemplo PITR por tempo):
+  #   docker compose ... --profile restore run --rm pgbackrest_restore \
+  #     sh -lc "pgbackrest --stanza=crm --type=time --target='2026-02-20 19:44:46+00' --log-level-file=off restore --pg1-path=/var/lib/postgresql/data"
+  pgbackrest_restore:
+    image: percona/percona-pgbackrest:latest
+    user: "999:999"
+    profiles: ["restore"]
+    networks:
+      - appnet
+    volumes:
+      - pgbackrest_repo:/var/lib/pgbackrest
+      - pgbackrest_spool:/var/lib/pgbackrest/spool
+      - pgdata_restore:/var/lib/postgresql/data
+      - ./pgbackrest/pgbackrest.conf:/etc/pgbackrest.conf:ro
+    entrypoint: ["sh", "-lc"]
+    command: ["echo 'Use docker compose run --rm pgbackrest_restore sh -lc \"pgbackrest ... restore\"'"]
+
+  # Banco restaurado (sobe automaticamente na 5433)
+  db_restore:
+    image: postgres:16
+    networks:
+      - appnet
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: ["postgres", "-c", "port=5433"]
+    volumes:
+      - pgdata_restore:/var/lib/postgresql/data
+      - pgbackrest_repo:/var/lib/pgbackrest:ro
+      - pgbackrest_spool:/var/lib/pgbackrest/spool:ro
+      - ./pgbackrest/pgbackrest.conf:/etc/pgbackrest.conf:ro
+
+volumes:
+  pgdata:
+  pgbackrest_repo:
+  pgbackrest_spool:
+  pgdata_restore:
+
+networks:
+  appnet:

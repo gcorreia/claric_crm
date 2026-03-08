@@ -1,0 +1,24 @@
+-- db/init/01_roles.sql
+-- Cria role "crm_app" (não-superuser) para o app (runtime).
+-- Runtime NÃO pode criar tabelas (sem CREATE no schema).
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'crm_app') THEN
+    CREATE ROLE crm_app LOGIN PASSWORD 'crm_app_pass';
+  END IF;
+END $$;
+
+ALTER ROLE crm_app NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
+
+GRANT CONNECT ON DATABASE crm TO crm_app;
+GRANT USAGE ON SCHEMA public TO crm_app;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO crm_app;
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO crm_app;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO crm_app;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO crm_app;
