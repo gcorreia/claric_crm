@@ -70,6 +70,7 @@ services:
     build: ./web
     environment:
       VITE_API_PROXY_TARGET: http://api:8000
+      VITE_APP_VERSION: ${APP_VERSION:-dev}
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     ports:
