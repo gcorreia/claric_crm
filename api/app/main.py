@@ -37,11 +37,29 @@ app.add_middleware(
 )
 
 
+LEGACY_API_PREFIXES = (
+    "/auth",
+    "/context",
+    "/users",
+    "/roles",
+    "/root",
+    "/contracts",
+    "/limits",
+    "/crm",
+    "/comercial",
+    "/academico",
+    "/financeiro",
+)
+
+
 @app.middleware("http")
-async def _legacy_auth_alias(request: Request, call_next):
+async def _legacy_api_alias(request: Request, call_next):
     path = request.scope.get("path", "")
-    if path == "/auth" or path.startswith("/auth/"):
-        request.scope["path"] = f"/api{path}"
+    if path and not path.startswith("/api"):
+        for prefix in LEGACY_API_PREFIXES:
+            if path == prefix or path.startswith(f"{prefix}/"):
+                request.scope["path"] = f"/api{path}"
+                break
     return await call_next(request)
 
 
