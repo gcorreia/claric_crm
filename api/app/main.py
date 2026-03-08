@@ -1,7 +1,7 @@
 # crm/api/app/main.py
 from __future__ import annotations
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.apps.academico.router import router as academico_router
@@ -35,6 +35,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def _legacy_auth_alias(request: Request, call_next):
+    path = request.scope.get("path", "")
+    if path == "/auth" or path.startswith("/auth/"):
+        request.scope["path"] = f"/api{path}"
+    return await call_next(request)
 
 
 @app.on_event("startup")
